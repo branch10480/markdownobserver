@@ -52,22 +52,27 @@ EOF
 
 ## Install to `/Applications/`
 
-The build lands in `DerivedData`, which Xcode can purge. To pin a usable copy and survive cleanups:
+One-liner from the repo root:
 
 ```bash
-BUILD=$(xcodebuild -project minimark.xcodeproj -scheme minimark -configuration Debug -destination 'platform=macOS' -showBuildSettings \
-  | awk -F' = ' '/^ *BUILT_PRODUCTS_DIR/{print $2; exit}')
-rm -rf "/Applications/MarkdownObserver-Fork.app"
-cp -R "$BUILD/MarkdownObserver.app" "/Applications/MarkdownObserver-Fork.app"
+./scripts/install.sh          # Release build, copied to /Applications/MarkdownObserver-Fork.app
+./scripts/install.sh --alias  # also appends `alias mdo=...` to ~/.zshrc
+./scripts/install.sh --debug  # Debug build instead of Release
 ```
 
-Then set it as the default opener for `.md`:
+The script runs `xcodebuild` with the fork-specific Bundle ID override, so no manual `Config/Signing.local.xcconfig` is required. No code signing — the binary never leaves this machine.
+
+Set it as the default opener for `.md`:
 
 ```bash
 duti -s com.github.branch10480.markdownobserver.fork md viewer  # requires `brew install duti`
 ```
 
 …or just right-click a `.md` file in Finder → **Open With → Other… → MarkdownObserver-Fork → Always Open With**.
+
+### Homebrew tap (experimental)
+
+There is a tap at [branch10480/homebrew-tap](https://github.com/branch10480/homebrew-tap) with a `markdownobserver-fork` formula that runs the same build under `brew install --HEAD`. **On macOS 26 it currently fails** because xcodebuild's SPM resolver invokes `sandbox-exec` inside Homebrew's subprocess and the kernel rejects `sandbox_apply` with `Operation not permitted` — a known issue that needs a fix in Homebrew or Xcode. The tap is parked for when that upstream fix lands; until then, `scripts/install.sh` is the reliable path.
 
 ## Launch
 
