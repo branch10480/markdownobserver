@@ -139,6 +139,8 @@ final class RenderingController {
         let effectiveFontSize = appearanceOverride?.baseFontSize ?? settings.baseFontSize
         let effectiveSyntaxTheme = appearanceOverride?.syntaxTheme ?? settings.syntaxTheme
         let theme = effectiveThemeKind.themeDefinition
+        let effectiveChangedRegions = settings.changeHighlightsEnabled ? changedRegions : []
+        let effectiveUnsavedChangedRegions = settings.changeHighlightsEnabled ? unsavedChangedRegions : []
 
         let docDir = fileURL?.deletingLastPathComponent()
         securityScopeResolver.activateTrustedImageFolderAccessIfNeeded(
@@ -154,8 +156,8 @@ final class RenderingController {
 
         let rendered = try renderingDependencies.renderer.render(
             markdown: imageResult.markdown,
-            changedRegions: changedRegions,
-            unsavedChangedRegions: unsavedChangedRegions,
+            changedRegions: effectiveChangedRegions,
+            unsavedChangedRegions: effectiveUnsavedChangedRegions,
             theme: theme,
             syntaxTheme: effectiveSyntaxTheme,
             baseFontSize: effectiveFontSize

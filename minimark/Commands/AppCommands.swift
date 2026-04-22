@@ -56,6 +56,13 @@ struct AppCommands: Commands {
                 stopFolderWatch?()
             }
             .disabled(!(hasActiveFolderWatch ?? false))
+
+            Divider()
+
+            Button("Close Window") {
+                NSApp.keyWindow?.performClose(nil)
+            }
+            .keyboardShortcut("w", modifiers: [.command])
         }
 
         CommandMenu("Watch") {

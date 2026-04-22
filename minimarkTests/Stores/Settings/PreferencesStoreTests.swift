@@ -25,6 +25,7 @@ struct PreferencesStoreTests {
             sidebarSortMode: .openOrder,
             sidebarGroupSortMode: .lastChangedNewestFirst,
             diffBaselineLookback: .twoMinutes,
+            changeHighlightsEnabled: true,
             dismissedHints: []
         )
         overrides(&slice)

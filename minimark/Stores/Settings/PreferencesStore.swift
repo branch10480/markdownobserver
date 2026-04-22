@@ -13,6 +13,7 @@ nonisolated struct PreferencesSlice: Equatable, Sendable {
     var sidebarSortMode: SidebarSortMode
     var sidebarGroupSortMode: SidebarSortMode
     var diffBaselineLookback: DiffBaselineLookback
+    var changeHighlightsEnabled: Bool
     var dismissedHints: Set<FirstUseHint>
 }
 
@@ -100,6 +101,12 @@ nonisolated struct PreferencesSlice: Equatable, Sendable {
     func updateDiffBaselineLookback(_ lookback: DiffBaselineLookback) {
         mutate(coalescePersistence: true) { slice in
             slice.diffBaselineLookback = lookback
+        }
+    }
+
+    func updateChangeHighlightsEnabled(_ isEnabled: Bool) {
+        mutate(coalescePersistence: true) { slice in
+            slice.changeHighlightsEnabled = isEnabled
         }
     }
 

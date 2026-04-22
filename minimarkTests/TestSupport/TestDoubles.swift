@@ -408,6 +408,12 @@ final class TestSettingsStore: SettingsStoring {
         subject.send(next)
     }
 
+    func updateChangeHighlightsEnabled(_ isEnabled: Bool) {
+        var next = subject.value
+        next.changeHighlightsEnabled = isEnabled
+        subject.send(next)
+    }
+
     func isHintDismissed(_ hint: FirstUseHint) -> Bool {
         subject.value.dismissedHints.contains(hint)
     }

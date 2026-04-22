@@ -298,6 +298,9 @@ struct WindowRootView: View {
             .onChange(of: appearanceController.effectiveAppearance) { _, _ in
                 windowCoordinator.appearanceLock.reapplyAcrossOpenDocuments()
             }
+            .onChange(of: settingsStore.currentSettings.changeHighlightsEnabled) { _, _ in
+                windowCoordinator.appearanceLock.reapplyAcrossOpenDocuments()
+            }
             .onChange(of: favoriteWorkspaceController.activeFavoriteWorkspaceState) { _, newState in
                 windowCoordinator.events.handleFavoriteWorkspaceStateChange(newState)
             }

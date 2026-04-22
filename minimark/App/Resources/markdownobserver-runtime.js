@@ -71,7 +71,7 @@
       html: true,
       linkify: true,
       typographer: false,
-      breaks: false
+      breaks: true
     });
 
     configureURLSanitizer(md);

@@ -18,6 +18,7 @@ nonisolated struct Settings: Equatable, Codable, Sendable {
     var recentManuallyOpenedFiles: [RecentOpenedFile]
     var trustedImageFolders: [TrustedImageFolder]
     var diffBaselineLookback: DiffBaselineLookback
+    var changeHighlightsEnabled: Bool
     var dismissedHints: Set<FirstUseHint>
 
     init(
@@ -35,6 +36,7 @@ nonisolated struct Settings: Equatable, Codable, Sendable {
         recentManuallyOpenedFiles: [RecentOpenedFile],
         trustedImageFolders: [TrustedImageFolder] = [],
         diffBaselineLookback: DiffBaselineLookback = .twoMinutes,
+        changeHighlightsEnabled: Bool = true,
         dismissedHints: Set<FirstUseHint> = []
     ) {
         self.appAppearance = appAppearance
@@ -51,6 +53,7 @@ nonisolated struct Settings: Equatable, Codable, Sendable {
         self.recentManuallyOpenedFiles = recentManuallyOpenedFiles
         self.trustedImageFolders = trustedImageFolders
         self.diffBaselineLookback = diffBaselineLookback
+        self.changeHighlightsEnabled = changeHighlightsEnabled
         self.dismissedHints = dismissedHints
     }
 
@@ -69,6 +72,7 @@ nonisolated struct Settings: Equatable, Codable, Sendable {
         case recentManuallyOpenedFiles
         case trustedImageFolders
         case diffBaselineLookback
+        case changeHighlightsEnabled
         case dismissedHints
     }
 
@@ -87,6 +91,7 @@ nonisolated struct Settings: Equatable, Codable, Sendable {
         recentManuallyOpenedFiles: [],
         trustedImageFolders: [],
         diffBaselineLookback: .twoMinutes,
+        changeHighlightsEnabled: true,
         dismissedHints: []
     )
 
@@ -106,6 +111,7 @@ nonisolated struct Settings: Equatable, Codable, Sendable {
         recentManuallyOpenedFiles = try container.decodeIfPresent([RecentOpenedFile].self, forKey: .recentManuallyOpenedFiles) ?? []
         trustedImageFolders = try container.decodeIfPresent([TrustedImageFolder].self, forKey: .trustedImageFolders) ?? []
         diffBaselineLookback = try container.decodeIfPresent(DiffBaselineLookback.self, forKey: .diffBaselineLookback) ?? .twoMinutes
+        changeHighlightsEnabled = try container.decodeIfPresent(Bool.self, forKey: .changeHighlightsEnabled) ?? true
         dismissedHints = try container.decodeIfPresent(Set<FirstUseHint>.self, forKey: .dismissedHints) ?? []
 
         // Migrate legacy favorites: replace hardcoded-default workspace state with decoded global settings
@@ -158,6 +164,7 @@ nonisolated struct Settings: Equatable, Codable, Sendable {
     func updateSidebarSortMode(_ mode: SidebarSortMode)
     func updateSidebarGroupSortMode(_ mode: SidebarSortMode)
     func updateDiffBaselineLookback(_ lookback: DiffBaselineLookback)
+    func updateChangeHighlightsEnabled(_ isEnabled: Bool)
 }
 
 @MainActor protocol FavoriteWriting: AnyObject {
@@ -298,6 +305,7 @@ typealias SettingsStoring = SettingsReading & SettingsWriting
                 sidebarSortMode: initialSettings.sidebarSortMode,
                 sidebarGroupSortMode: initialSettings.sidebarGroupSortMode,
                 diffBaselineLookback: initialSettings.diffBaselineLookback,
+                changeHighlightsEnabled: initialSettings.changeHighlightsEnabled,
                 dismissedHints: initialSettings.dismissedHints
             )
         )
@@ -362,6 +370,7 @@ typealias SettingsStoring = SettingsReading & SettingsWriting
             recentManuallyOpenedFiles: recentOpenedFiles.currentRecentOpenedFiles,
             trustedImageFolders: trustedImageFolders.currentTrustedFolders,
             diffBaselineLookback: prefs.diffBaselineLookback,
+            changeHighlightsEnabled: prefs.changeHighlightsEnabled,
             dismissedHints: prefs.dismissedHints
         )
     }
@@ -383,6 +392,7 @@ typealias SettingsStoring = SettingsReading & SettingsWriting
     func updateSidebarSortMode(_ mode: SidebarSortMode) { preferences.updateSidebarSortMode(mode) }
     func updateSidebarGroupSortMode(_ mode: SidebarSortMode) { preferences.updateSidebarGroupSortMode(mode) }
     func updateDiffBaselineLookback(_ lookback: DiffBaselineLookback) { preferences.updateDiffBaselineLookback(lookback) }
+    func updateChangeHighlightsEnabled(_ isEnabled: Bool) { preferences.updateChangeHighlightsEnabled(isEnabled) }
 
     // MARK: - HintWriting
 

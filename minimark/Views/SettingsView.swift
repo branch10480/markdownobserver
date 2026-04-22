@@ -126,6 +126,26 @@ struct SettingsView: View {
     private var changeHighlightingSection: some View {
         SettingsSectionContainer(title: "Change Highlighting") {
             HStack(spacing: 14) {
+                Text("Show change highlights")
+                    .foregroundStyle(.secondary)
+                    .frame(width: 180, alignment: .leading)
+
+                Spacer(minLength: 12)
+
+                Toggle("Show change highlights", isOn: Binding(
+                    get: { settingsStore.currentSettings.changeHighlightsEnabled },
+                    set: { settingsStore.updateChangeHighlightsEnabled($0) }
+                ))
+                .labelsHidden()
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+
+            Text("Highlight changed regions in the preview — both saved file diffs (added/edited/deleted blocks with gutter indicators) and in-progress edits. Turn off if the highlights feel distracting.")
+                .font(.callout)
+                .foregroundStyle(.secondary)
+                .frame(maxWidth: .infinity, alignment: .leading)
+
+            HStack(spacing: 14) {
                 Text("Diff lookback")
                     .foregroundStyle(.secondary)
                     .frame(width: 180, alignment: .leading)
@@ -141,6 +161,7 @@ struct SettingsView: View {
                 }
                 .labelsHidden()
                 .frame(width: 190)
+                .disabled(!settingsStore.currentSettings.changeHighlightsEnabled)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
 
