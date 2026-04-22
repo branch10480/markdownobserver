@@ -2,6 +2,10 @@
 
 A personal fork of [larspohlmann/markdownobserver](https://github.com/larspohlmann/markdownobserver), used as a Marked 2 replacement on my own machine. Upstream is MIT-licensed.
 
+<p align="center">
+  <img src="screenshots/fork-preview.png" alt="MarkdownObserver fork preview with user.css applied (warm paper palette + full-width tables)" width="820">
+</p>
+
 This README is written for **future me**: a quick reference for building, launching, and customizing this fork without digging through commit history.
 
 ## What this fork changes
