@@ -444,11 +444,9 @@ enum CSSThemeGenerator {
         }
 
         .markdown-body table {
-          display: block;
-          width: max-content;
-          min-width: 100%;
-          max-width: 100%;
-          overflow-x: auto;
+          display: table;
+          width: 100%;
+          table-layout: auto;
           border-collapse: collapse;
           border-spacing: 0;
           margin: 0.9em 0 1.1em;
