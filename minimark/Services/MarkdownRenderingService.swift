@@ -21,15 +21,18 @@ struct MarkdownRenderingService: MarkdownRendering {
     private let cssFactory: CSSFactory
     private let payloadEncoder: MarkdownRuntimePayloadEncoding
     private let runtimeAssetResolver: RuntimeAssetResolving
+    private let userCSSLoader: UserCustomCSSLoading
 
     init(
         cssFactory: CSSFactory = CSSFactory(),
         payloadEncoder: MarkdownRuntimePayloadEncoding = JSONBase64MarkdownRuntimePayloadEncoder(),
-        runtimeAssetResolver: RuntimeAssetResolving = BundledRuntimeAssetResolver()
+        runtimeAssetResolver: RuntimeAssetResolving = BundledRuntimeAssetResolver(),
+        userCSSLoader: UserCustomCSSLoading = BundledUserCustomCSSLoader()
     ) {
         self.cssFactory = cssFactory
         self.payloadEncoder = payloadEncoder
         self.runtimeAssetResolver = runtimeAssetResolver
+        self.userCSSLoader = userCSSLoader
     }
 
     func render(
@@ -46,7 +49,8 @@ struct MarkdownRenderingService: MarkdownRendering {
             changedRegions: changedRegions,
             unsavedChangedRegions: unsavedChangedRegions
         )
-        let css = cssFactory.makeCSS(theme: theme, syntaxTheme: syntaxTheme, baseFontSize: baseFontSize)
+        let themeCSS = cssFactory.makeCSS(theme: theme, syntaxTheme: syntaxTheme, baseFontSize: baseFontSize)
+        let css = Self.merged(themeCSS: themeCSS, userCSS: userCSSLoader.loadUserCSS())
         let htmlDocument = cssFactory.makeHTMLDocument(
             css: css,
             payloadBase64: payloadBase64,
@@ -59,5 +63,12 @@ struct MarkdownRenderingService: MarkdownRendering {
             changedRegions: changedRegions,
             renderedAt: Date()
         )
+    }
+
+    private static func merged(themeCSS: String, userCSS: String?) -> String {
+        guard let userCSS, !userCSS.isEmpty else {
+            return themeCSS
+        }
+        return themeCSS + "\n\n/* === user.css (loaded from ~/Library/Application Support/MarkdownObserver/themes/) === */\n" + userCSS
     }
 }
