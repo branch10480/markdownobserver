@@ -10,6 +10,7 @@ profiling/
 # Editor / local tooling
 .vscode/
 .xcodebuildmcp/
+.serena/
 
 # Python virtualenv used for local tooling
 .venv/
