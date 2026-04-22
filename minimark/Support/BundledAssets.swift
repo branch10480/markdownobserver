@@ -9,6 +9,29 @@ struct RuntimeAssets: Equatable, Sendable {
     let deflistScriptPath: String?
     let calloutsScriptPath: String?
     let calloutsCSSPath: String?
+    let mathJaxScriptPath: String?
+
+    init(
+        markdownItScriptPath: String,
+        highlightScriptPath: String?,
+        taskListsScriptPath: String?,
+        footnoteScriptPath: String?,
+        attrsScriptPath: String?,
+        deflistScriptPath: String?,
+        calloutsScriptPath: String?,
+        calloutsCSSPath: String?,
+        mathJaxScriptPath: String? = nil
+    ) {
+        self.markdownItScriptPath = markdownItScriptPath
+        self.highlightScriptPath = highlightScriptPath
+        self.taskListsScriptPath = taskListsScriptPath
+        self.footnoteScriptPath = footnoteScriptPath
+        self.attrsScriptPath = attrsScriptPath
+        self.deflistScriptPath = deflistScriptPath
+        self.calloutsScriptPath = calloutsScriptPath
+        self.calloutsCSSPath = calloutsCSSPath
+        self.mathJaxScriptPath = mathJaxScriptPath
+    }
 }
 
 protocol RuntimeAssetResolving {
@@ -34,6 +57,7 @@ enum BundledAssets {
     static let calloutsCSSPath = "Contents/Resources/callout-blocks.css"
     static let mermaidScriptPath = "Contents/Resources/mermaid.min.js"
     static let mermaidCSSPath = "Contents/Resources/mermaid-diagrams.css"
+    static let mathJaxScriptPath = "Contents/Resources/tex-svg-full.js"
 
     static func requiredRuntimeAssets() throws -> RuntimeAssets {
         let markdownURL = Bundle.main.bundleURL.appendingPathComponent(markdownItScriptPath)
@@ -49,8 +73,13 @@ enum BundledAssets {
             attrsScriptPath: availableAttrsScriptPath(),
             deflistScriptPath: availableDeflistScriptPath(),
             calloutsScriptPath: availableCalloutsScriptPath(),
-            calloutsCSSPath: availableCalloutsCSSPath()
+            calloutsCSSPath: availableCalloutsCSSPath(),
+            mathJaxScriptPath: availableMathJaxScriptPath()
         )
+    }
+
+    static func availableMathJaxScriptPath() -> String? {
+        availableScriptPath(mathJaxScriptPath)
     }
 
     static func availableHighlightJSScriptPath() -> String? {
