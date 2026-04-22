@@ -6,6 +6,16 @@
 .markdown-body blockquote.callout {
   border-left-width: 0.3em;
   padding: 0.6em 1em;
+  /* Override the muted --reader-blockquote-fg default so body text stays
+     readable on the tinted callout background. */
+  color: var(--reader-fg);
+}
+
+.markdown-body blockquote.callout p,
+.markdown-body blockquote.callout li,
+.markdown-body blockquote.callout td,
+.markdown-body blockquote.callout th {
+  color: var(--reader-fg);
 }
 
 /* ── Title row (icon + label) ───────────────────────────────────────── */

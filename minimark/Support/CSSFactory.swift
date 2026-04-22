@@ -24,7 +24,7 @@ struct CSSFactory {
         let themeJSBase64 = themeJavaScript.map { Data($0.utf8).base64EncodedString() }
         let runtimeScripts = makeRuntimeScripts(runtimeAssets: runtimeAssets)
         let runtimeCSSLinks = makeRuntimeCSSLinks(runtimeAssets: runtimeAssets)
-        let mathRuntimeScripts = makeMathRuntimeScripts()
+        let mathRuntimeScripts = makeMathRuntimeScripts(mathJaxScriptPath: runtimeAssets.mathJaxScriptPath)
         let bootstrapRuntime = makeBootstrapRuntime(
             payloadBase64: payloadBase64,
             cssBase64: cssBase64
@@ -92,11 +92,11 @@ struct CSSFactory {
       [runtimeAssets.calloutsCSSPath].compactMap { $0 }.map(makeCSSLinkTag).joined(separator: "\n")
     }
 
-    private func makeMathRuntimeScripts() -> String {
-      """
+    private func makeMathRuntimeScripts(mathJaxScriptPath: String?) -> String {
+      let configScript = """
       <script>
       // MathJax is optional. Avoid remote script injection to keep rendering local-only.
-      // If a local MathJax bundle is added later, this config remains compatible.
+      // Config must be declared before MathJax loads.
       if (!window.MathJax) {
         window.MathJax = {
           tex: {
@@ -111,6 +111,13 @@ struct CSSFactory {
       }
       </script>
       """
+
+      guard let mathJaxScriptPath else {
+        return configScript
+      }
+
+      let escapedPath = mathJaxScriptPath.replacingOccurrences(of: "\"", with: "&quot;")
+      return configScript + "\n<script src=\"\(escapedPath)\" async></script>"
     }
 
     private func makeBootstrapRuntime(payloadBase64: String, cssBase64: String) -> String {
