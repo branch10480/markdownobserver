@@ -70,9 +70,13 @@ duti -s com.github.branch10480.markdownobserver.fork md viewer  # requires `brew
 
 …or just right-click a `.md` file in Finder → **Open With → Other… → MarkdownObserver-Fork → Always Open With**.
 
-### Homebrew tap (experimental)
+### Homebrew tap
 
-There is a tap at [branch10480/homebrew-tap](https://github.com/branch10480/homebrew-tap) with a `markdownobserver-fork` formula that runs the same build under `brew install --HEAD`. **On macOS 26 it currently fails** because xcodebuild's SPM resolver invokes `sandbox-exec` inside Homebrew's subprocess and the kernel rejects `sandbox_apply` with `Operation not permitted` — a known issue that needs a fix in Homebrew or Xcode. The tap is parked for when that upstream fix lands; until then, `scripts/install.sh` is the reliable path.
+```bash
+brew install --HEAD branch10480/tap/markdownobserver-fork
+```
+
+The formula disables xcodebuild's inner sandbox (`IDEPackageSupportDisableManifestSandbox`, `-disable-sandbox`) to avoid the nested `sandbox-exec` failure on macOS 26. If the build still fails with `sandbox_apply: Operation not permitted`, add `HOMEBREW_NO_SANDBOX=1` as a fallback.
 
 ## Launch
 
